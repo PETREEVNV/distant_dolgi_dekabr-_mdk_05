@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>06.12</title>
+    <style>
+        .content {
+            max-width: 1366px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+
+        .task-one {
+            display: flex;
+            justify-content: left;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 55%;
+        }
+
+        .task-one__inputs {
+            height: 50%;
+            width: 50%;
+            margin-bottom: 2%;
+        }
+
+        .task-one__inputs input {
+            width: 20%;
+            margin-bottom: 20px;
+        }
+
+        .tast-one__buttons {
+            width: 100%;
+        }
+
+        .task-two {
+            width: 100%;
+            height: 100%;
+        }
+
+        .task-two select {
+            margin-bottom: 2%;
+        }
+
+        .task-two input {
+            margin-bottom: 2%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <h2>Задача 1</h2>
+        <h2>Решение квадратного уравнения</h2>
+        <div class="task-one">
+            <div class="task-one__inputs">
+                <form>
+                    <fieldset class="form-border">
+                        <legend>Дано</legend>
+                        <label for="num">Введите значение коэффициента A</label>
+                        <input type="number" name="num" value="0"><br>
+                        <label for="num">Введите значение коэффициента B</label>
+                        <input type="number" name="num" value="0"><br>
+                        <label for="num">Введите значение коэффициента C</label>
+                        <input type="number" name="num" value="0">
+                    </fieldset>
+                </form>
+            </div>
+            <div class="task-one__inputs">
+                <form>
+                    <fieldset class="form-border">
+                        <legend>Решение</legend>
+                        <label for="discr">D=</label>
+                        <input type="text" name="discr" readonly><br>
+                        <label for="equation">Для уравнения:</label>
+                        <input type="text" name="equation" readonly style="width: 50%;"><br>
+                        <label for="x">x1 = </label>
+                        <input type="text" name="x" readonly>
+                        <label for="x">x2 = </label>
+                        <input type="text" name="x" readonly>
+                        <div id="info"></div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="tast-one__buttons">
+                <input type="button" value="Показать решение" style="width: 40%;" onclick="res()">
+                <input type="reset" value="Очистить" style="width: 40%;" onclick="cl()">
+            </div>
+        </div>
+    </div>
+    <script>
+        let num = document.getElementsByName('num');
+        let discr = document.getElementsByName('discr');
+        let equation = document.getElementsByName('equation');
+        let x = document.getElementsByName('x');
+        let info = document.getElementById('info');
+
+        function res() {
+            cl();
+            let num_a = num[0].value;
+            let num_b = num[1].value;
+            let num_c = num[2].value;
+
+            //первый коэффициент (a)
+            if (num_a == 0) {
+                num_a = '';
+            }
+            else if (num_a == 1) {
+                num_a = 'x²';
+            }
+            else {
+                num_a = num[0].value + 'x²';
+            }
+
+            //второй коэффициент (b)
+            if (num_b == 0) {
+                num_b = '';
+            }
+            else if (num_b == 1) {
+                num_b = '+x';
+            }
+            else if (num_b == -1) {
+                num_b = '-x';
+            }
+            else if (num_b > 0) {
+                num_b = '+' + num[1].value + 'x';
+            }
+            else {
+                num_b = num[1].value + 'x';
+            }
+
+            //третий коэффициент (c)
+            if (num_c == 0) {
+                num_c = '';
+            }
+            else if (num_c > 0) {
+                num_c = '+' + num[2].value;
+            }
+            else if (num_c < 0) {
+                num_c = num[2].value;
+            }
+
+            equation[0].value = num_a + num_b + num_c + '=0';//квадратное уравнение
+            discr[0].value = Math.pow(num[1].value, 2) - 4 * num[0].value * num[2].value;//дискриминант
+            x[0].value = (-num[1].value + Math.sqrt(discr[0].value)) / 2 * num[0].value;//первый корень
+            x[1].value = (-num[1].value - Math.sqrt(discr[0].value)) / 2 * num[0].value;//второй корень
+            if (x[0].value == x[1].value) {
+                x[0].value = (-num[1].value + Math.sqrt(discr[0].value)) / 2 * num[0].value;
+                x[1].value = '';
+                info.innerHTML = 'В уравнении 1 корень';
+            }
+            if (num[0].value == 0 && num[1].value == 0) {
+                alert('Введите A и/или B');
+                cl();
+            }
+            if (discr[0].value < 0) {
+                alert('Дискриминант некорректен');
+                cl();
+            }
+        }
+
+        function cl() {
+            for (i = 0; i < x.length; i++) {
+                x[i].value = '';
+            }
+
+            discr[0].value = '';
+            equation[0].value = '';
+            info.innerHTML = '';
+        }
+    </script>
+
+    <div class="content">
+        <div class="task-two">
+            <h2>Задача 2</h2>
+            <h2>Перевод единиц</h2>
+            <select id="translation" onchange="selectUnit(this)">
+                <option selected disabled>Выберите единицы</option>
+                <option value="1">Из градусов в радианы</option>
+                <option value="2">Из градусов по Цельсию в градусы по Кельвину</option>
+                <option value="3">Из одной системы счисления в другую</option>
+            </select>
+            <div id="geometry" style="display: none;">
+                <select id="g1">
+                    <option value="1" selected>градусы</option>
+                    <option value="2">радианы</option>
+                </select>
+                <input type="number" id="g1_inp"><br>
+                <select id="g2">
+                    <option value="1" selected>радианы</option>
+                    <option value="2">градусы</option>
+                </select>
+                <input type="number" id="g2_inp" readonly><br>
+                <button onclick="geometryRes()">Рассчитать</button>
+            </div>
+            <div id="degree" style="display: none;">
+                <select id="d1">
+                    <option value="1">°C</option>
+                    <option value="2">K</option>
+                </select>
+                <input type="number" id="d1_inp"><br>
+                <select id="d2">
+                    <option value="1">K</option>
+                    <option value="2">°C</option>
+                </select>
+                <input type="number" id="d2_inp" readonly><br>
+                <button onclick="degreeRes()">Рассчитать</button>
+            </div>
+            <div id="num_syst" style="display: none;">
+                <input type="number" style="width: 30px;" value="10" id="n1">
+                <input type="number" id="n1_inp"><br>
+                <input type="number" style="width: 30px;" value="16" id="n2">
+                <input type="number" id="n2_inp" readonly><br>
+                <button onclick="num_systRes()">Рассчитать</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let geometry = document.getElementById('geometry');
+        let degree = document.getElementById('degree');
+        let num_syst = document.getElementById('num_syst');
+
+        let translation = document.getElementById('translation');
+
+        function selectUnit(unit) {//Выбор единиц перевода
+            if (unit.options[unit.selectedIndex].value == 1) {
+                geometry.style.display = 'block';
+                degree.style.display = 'none';
+                num_syst.style.display = 'none';
+            }
+            if (unit.options[unit.selectedIndex].value == 2) {
+                geometry.style.display = 'none';
+                degree.style.display = 'block';
+                num_syst.style.display = 'none';
+            }
+            if (unit.options[unit.selectedIndex].value == 3) {
+                geometry.style.display = 'none';
+                degree.style.display = 'none';
+                num_syst.style.display = 'block';
+            }
+        }
+
+        function geometryRes() {
+            let g1 = document.getElementById('g1');
+            let g2 = document.getElementById('g2');
+            let g1_inp = document.getElementById('g1_inp');
+            let g2_inp = document.getElementById('g2_inp');
+            if (g1.options[g1.selectedIndex].text == g2.options[g2.selectedIndex].text) {
+                g2_inp.value = g1_inp.value;
+            }
+            else if (g1.value == 1 && g2.value == 1) {
+                g2_inp.value = (Math.PI * g1_inp.value) / 180;
+            }
+            else if (g1.value == 2 && g2.value == 2) {
+                g2_inp.value = (180 * g1_inp.value) / Math.PI;
+            }
+        }
+
+        function degreeRes() {
+            let d1 = document.getElementById('d1');
+            let d2 = document.getElementById('d2');
+            let d1_inp = document.getElementById('d1_inp');
+            let d2_inp = document.getElementById('d2_inp');
+            if (d1.options[d1.selectedIndex].text == d2.options[d2.selectedIndex].text) {
+                d2_inp.value = d1_inp.value;
+            }
+            else if (d1.value == 1 && d2.value == 1) {
+                d2_inp.value = parseFloat(d1_inp.value) + 274.15;
+            }
+            else if (d1.value == 2 && d2.value == 2) {
+                d2_inp.value = parseFloat(d1_inp.value) - 274.15;
+            }
+        }
+
+        function num_systRes() {
+            let n1 = document.getElementById('n1');
+            let n2 = document.getElementById('n2');
+            let n1_inp = document.getElementById('n1_inp');
+            let n2_inp = document.getElementById('n2_inp');
+            if (n1.value >= 2 && n2.value >= 2 &&
+                n1.value <= 16 && n2.value <= 16) {
+                let a = parseInt(n1_inp.value, n1.value); 
+                let b = parseInt(a, n2.value);
+                n2_inp.value = b;
+            }
+            else {
+                alert('Системы счисления от 2 до 16!');
+            }
+        }
+
+    </script>
+
+    <div class="content">
+        <div class="task-three">
+            <h2>Задача 3</h2>
+            <h2>Определитель матрицы</h2>
+            <table>
+                <tr>
+                    <td> </td>
+                    <td>
+                        <select name="a11" id="a11">
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="a12" id="a12">
+                            <option value="1">1</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="a13" id="a13">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>det</td>
+                    <td>
+                        <select name="a21" id="a21">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4" selected>4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="a22" id="a22">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5" selected>5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="a23" id="a23">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6" selected>6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td>=</td>
+                    <td>
+                        <input type="text" id="res3" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td> </td>
+                    <td>
+                        <select name="a31" id="a31">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7" selected>7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="a32" id="a32">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8" selected>8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="a33" id="a33">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9" selected>9</option>
+                        </select>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            <input type="button" value="Найти определитель" onclick="findDet()">
+        </div>
+    </div>
+    <script>
+        function findDet() {
+            let a11 = document.getElementById("a11");
+            let a12 = document.getElementById("a12");
+            let a13 = document.getElementById("a13");
+            let a21 = document.getElementById("a21");
+            let a22 = document.getElementById("a22");
+            let a23 = document.getElementById("a23");
+            let a31 = document.getElementById("a31");
+            let a32 = document.getElementById("a32");
+            let a33 = document.getElementById("a33");
+            let res3 = document.getElementById('res3');
+            res3.value =
+                a11.value * a22.value * a33.value + a12.value * a23.value * a31.value + a13.value * a32.value * a21.value -
+                a13.value * a22.value * a31.value - a12.value * a33.value * a21.value - a11.value * a23.value * a32.value;
+        }
+    </script>
+</body>
+
+</html>

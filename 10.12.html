@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .num {
+            width: 50px;
+        }
+        form{
+            width: 300px;
+        }
+        legend{
+            font-size: 13px;
+            color: rgb(51, 51, 211);
+        }
+        input{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Однорукий бандит</h2>
+    <div><p>Вращайте барабан!</p></div>
+    <input type="text" name="num" class="num" readonly>
+    <input type="text" name="num" class="num" readonly>
+    <input type="text" name="num" class="num" readonly>
+    <input type="button" value="Вращать" onclick="result()">
+    <form>
+        <fieldset class="form-border">
+            <legend>Статистика</legend>
+            <label for="attempts">Число попыток:</label>
+            <input type="text" name="attempts" class="num" readonly value="0"><br>
+            <label for="winnings">Число выигрышей:</label>
+            <input type="text" name="winnings" class="num" readonly value="0"><br>
+            <select id="variants" multiple>
+                <option disabled value="placeholder">Выпавшие варианты:</option>
+            </select>
+        </fieldset>
+    </form>
+    <script>
+        let num = document.getElementsByName('num');
+
+        let attempts = document.getElementsByName('attempts');
+        let winnings = document.getElementsByName('winnings');
+
+        let variants = document.getElementById('variants');
+
+        var attemptsKol = 0;//количество попыток
+        var winningsKol = 0;//количество выигрышей
+
+        function getRandomInt(max) {
+            //функция для генерации случ. числа
+            return Math.floor(Math.random() * max);
+        }
+
+        function result(){
+
+            for(i=0;i<num.length;i++){
+                //задание выпадающих чисел
+                num[i].value = getRandomInt(10);
+            }
+
+            attempts[0].value = ++attemptsKol;//число попыток
+
+            if(num[0].value==num[1].value && //число выигрышей
+               num[1].value==num[2].value &&
+               num[2].value==num[0].value){
+                winnings[0].value = ++winningsKol;
+            }
+            
+            var opt = document.createElement('option');
+            opt.innerHTML = num[0].value + num[1].value + num[2].value;
+            variants.appendChild(opt);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Выберите товары</h2>
+
+    <label for="printers">Принтеры:</label><br>
+    <select name="printers" id="printer" multiple>
+        <option value="1">HP Color LaserJet 2600n</option>
+        <option value="2">HP LaserJet 1018</option>
+        <option value="3">Lexmark X2350</option>
+        <option value="4">Epson Stylus C110</option>
+        <option value="5">Ricoh Aficio CL7100D</option>
+    </select><br>
+    <button class="addCart">Добавить в корзину</button><br>
+
+    <label for="monitors">Мониторы:</label><br>
+    <select name="monitors" id="monitor" multiple>
+        <option value="1">LG Flatron L266WTQ-WF</option>
+        <option value="2">Samsung SyncMaster 225BW</option>
+        <option value="3">View Sonic VX2255w mb</option>
+        <option value="4">Acer X221W</option>
+        <option value="5">Envision G22LWK</option>
+    </select><br>
+    <button class="addCart">Добавить в корзину</button><br>
+
+    <label for="boards">Интерактивные доски:</label><br>
+    <select name="boards" id="board" multiple>
+        <option value="1">SMARTboard</option>
+        <option value="2">Interv rite SchoolBoard</option>
+        <option value="3">PolyVision Webster</option>
+        <option value="4">Promethean ACTIV board 50</option>
+        <option value="5">ACTIV board 64</option>
+    </select><br>
+    <button class="addCart">Добавить в корзину</button><br>
+
+    <label for="cart"><b>Выбранные товары (корзина):</b></label><br>
+    <select name="cart" id="cart" multiple>
+        <option value="placeholder" disabled>Выбранные товары</option>
+    </select><br>
+    <button onclick="deleteCart()">Удалить выбранный товар</button><br>
+
+    <label for="currencies">Валюта:</label>
+    <select name="currencies" id="currency">
+        <option value="1">Рубли</option>
+        <option value="2">Доллары</option>
+    </select>
+    <div id="costOfGood"></div>
+    <div id="totalCost"></div>
+
+    <script>
+        let cart = document.getElementById('cart');
+        let currency = document.getElementById('currency');
+
+        let costOfGood = document.getElementById('costOfGood');
+        let totalCost = document.getElementById('totalCost');
+
+        let buttonAdd = document.getElementsByClassName('addCart');
+        let selects = document.getElementsByTagName('select');
+
+        var val = 0;
+
+        for (i = 0; i < buttonAdd.length; i++) {
+            //Добавление товара в корзину
+            let j = i;
+            buttonAdd[i].onclick = function () {
+                var opt = document.createElement('option');
+                opt.value = val;
+                opt.innerHTML = selects[j].options[selects[j].selectedIndex].text;
+                cart.appendChild(opt);
+
+                val++;
+                costChange();
+            }
+        }
+
+        function deleteCart() {
+            //Удаление товара из корзины
+            for (i = 0; i < cart.length; i++) {
+                cart.options[cart.selectedIndex].remove();
+                val--;
+                costChange();
+            }
+        }
+
+        for(i=0;i<cart.length;i++){
+            //Вывод цены выбранного товара в корзине
+            cart.onclick = function() {
+                let cost = 0;
+                switch(currency.value){
+                    case '1': 
+                    cost = parseInt(cart.options[cart.selectedIndex].value);
+                    costOfGood.innerHTML = 'Цена выбранного товара: ' + parseInt(cost+1)*1000; break;
+                    case '2': 
+                    cost = parseInt(cart.options[cart.selectedIndex].value);
+                    costOfGood.innerHTML = 'Цена выбранного товара: ' + parseInt(cost+1)*60; break;
+                }
+                
+            }
+        }
+
+        function costChange(){
+            //Изменение цены при взаимодействии с корзиной
+            switch(currency.value){
+                    case '1': 
+                    totalCost.innerHTML = 'Цена за все товары: ' + parseInt(val*1000); break;
+                    case '2': 
+                    totalCost.innerHTML = 'Цена за все товары: ' + parseInt(val*60); break;
+                }
+
+            if (val==0){
+                totalCost.innerHTML = '';
+            }
+        }
+
+    </script>
+</body>
+
+</html>
